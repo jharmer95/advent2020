@@ -2,27 +2,27 @@ use inputs::get_input;
 
 struct PassWordRule {
     character: char,
-    n1: u64,
-    n2: u64,
+    n1: usize,
+    n2: usize,
 }
 
 impl PassWordRule {
-    fn parse(in_str: &String) -> (PassWordRule, String) {
-        let chunks: Vec<&str> = in_str.split(" ").collect();
-        let reps: Vec<&str> = chunks[0].split("-").collect();
+    fn parse(in_str: &str) -> (Self, String) {
+        let chunks: Vec<&str> = in_str.split(' ').collect();
+        let reps: Vec<&str> = chunks[0].split('-').collect();
 
         (
-            PassWordRule {
-                character: chunks[1].chars().nth(0).unwrap(),
-                n1: String::from(reps[0]).parse::<u64>().unwrap(),
-                n2: String::from(reps[1]).parse::<u64>().unwrap(),
+            Self {
+                character: chunks[1].chars().next().unwrap(),
+                n1: String::from(reps[0]).parse::<usize>().unwrap(),
+                n2: String::from(reps[1]).parse::<usize>().unwrap(),
             },
             String::from(chunks[2]),
         )
     }
 }
 
-fn validate1(rule: &PassWordRule, in_str: &String) -> bool {
+fn validate1(rule: &PassWordRule, in_str: &str) -> bool {
     let mut count = 0;
 
     for c in in_str.chars() {
@@ -34,7 +34,7 @@ fn validate1(rule: &PassWordRule, in_str: &String) -> bool {
     count <= rule.n2 && count >= rule.n1
 }
 
-fn part1(list: &Vec<String>) -> u64 {
+fn part1(list: &[String]) -> u64 {
     let mut count = 0;
 
     for line in list {
@@ -47,14 +47,13 @@ fn part1(list: &Vec<String>) -> u64 {
     count
 }
 
-fn validate2(rule: &PassWordRule, in_str: &String) -> bool {
+fn validate2(rule: &PassWordRule, in_str: &str) -> bool {
     let chars: Vec<char> = in_str.chars().collect();
 
-    (chars[(rule.n1 - 1) as usize] == rule.character)
-        ^ (chars[(rule.n2 - 1) as usize] == rule.character)
+    (chars[(rule.n1 - 1)] == rule.character) ^ (chars[(rule.n2 - 1)] == rule.character)
 }
 
-fn part2(list: &Vec<String>) -> u64 {
+fn part2(list: &[String]) -> u64 {
     let mut count = 0;
 
     for line in list {
@@ -72,4 +71,12 @@ fn main() {
 
     println!("Part 1 solution: {}", part1(&input_lines));
     println!("Part 2 solution: {}", part2(&input_lines));
+}
+
+#[test]
+fn check() {
+    let input_lines = get_input::<String>("../inputs/day-2.txt").expect("Could not parse path!");
+    
+    assert_eq!(part1(&input_lines), 582u64);
+    assert_eq!(part2(&input_lines), 729u64);
 }

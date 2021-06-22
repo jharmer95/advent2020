@@ -1,6 +1,6 @@
 use inputs::get_input;
 
-fn validate_passport_string1(pass_str: &String) -> bool {
+fn validate_passport_string1(pass_str: &str) -> bool {
     pass_str.contains("byr:")
         && pass_str.contains("iyr:")
         && pass_str.contains("eyr:")
@@ -10,13 +10,13 @@ fn validate_passport_string1(pass_str: &String) -> bool {
         && pass_str.contains("pid:")
 }
 
-fn validate_passport_string2(pass_str: &String) -> bool {
-    let keys: Vec<&str> = pass_str.split(" ").collect();
+fn validate_passport_string2(pass_str: &str) -> bool {
+    let keys: Vec<&str> = pass_str.split(' ').collect();
 
     match keys.iter().find(|&s| (*s).starts_with("byr:")) {
         Some(s) => match s.chars().skip(4).collect::<String>().parse::<i32>() {
             Ok(num) => {
-                if num < 1920 || num > 2002 {
+                if !(1920..=2002).contains(&num) {
                     return false;
                 }
             }
@@ -32,7 +32,7 @@ fn validate_passport_string2(pass_str: &String) -> bool {
     match keys.iter().find(|&s| (*s).starts_with("iyr:")) {
         Some(s) => match s.chars().skip(4).collect::<String>().parse::<i32>() {
             Ok(num) => {
-                if num < 2010 || num > 2020 {
+                if !(2010..=2020).contains(&num) {
                     return false;
                 }
             }
@@ -48,7 +48,7 @@ fn validate_passport_string2(pass_str: &String) -> bool {
     match keys.iter().find(|&s| (*s).starts_with("eyr:")) {
         Some(s) => match s.chars().skip(4).collect::<String>().parse::<i32>() {
             Ok(num) => {
-                if num < 2020 || num > 2030 {
+                if !(2020..=2030).contains(&num) {
                     return false;
                 }
             }
@@ -73,7 +73,7 @@ fn validate_passport_string2(pass_str: &String) -> bool {
                     .parse::<i32>()
                 {
                     Ok(hgt) => {
-                        if hgt < 150 || hgt > 193 {
+                        if !(150..=193).contains(&hgt) {
                             return false;
                         }
                     }
@@ -89,7 +89,7 @@ fn validate_passport_string2(pass_str: &String) -> bool {
                         .parse::<i32>()
                     {
                         Ok(hgt) => {
-                            if hgt < 59 || hgt > 76 {
+                            if !(59..=76).contains(&hgt) {
                                 return false;
                             }
                         }
@@ -131,14 +131,7 @@ fn validate_passport_string2(pass_str: &String) -> bool {
         Some(s) => {
             let ecl_str = s.chars().skip(4).collect::<String>();
 
-            if ecl_str != "amb"
-                && ecl_str != "blu"
-                && ecl_str != "brn"
-                && ecl_str != "gry"
-                && ecl_str != "grn"
-                && ecl_str != "hzl"
-                && ecl_str != "oth"
-            {
+            if !["amb", "blu", "brn", "gry", "grn", "hzl", "oth"].contains(&ecl_str.as_str()) {
                 return false;
             }
         }
@@ -153,22 +146,13 @@ fn validate_passport_string2(pass_str: &String) -> bool {
                 return false;
             }
 
-            match s.chars().skip(4).collect::<String>().parse::<u64>() {
-                Ok(_) => {
-                    return true;
-                }
-                _ => {
-                    return false;
-                }
-            }
+            matches!(s.chars().skip(4).collect::<String>().parse::<u64>(), Ok(_))
         }
-        None => {
-            return false;
-        }
+        None => false,
     }
 }
 
-fn part1(inputs: &Vec<String>) -> u64 {
+fn part1(inputs: &[String]) -> u64 {
     let mut str_buf: String = String::from("");
     let mut valid_count = 0;
 
@@ -194,7 +178,7 @@ fn part1(inputs: &Vec<String>) -> u64 {
     valid_count
 }
 
-fn part2(inputs: &Vec<String>) -> u64 {
+fn part2(inputs: &[String]) -> u64 {
     let mut str_buf: String = String::from("");
     let mut valid_count = 0;
 
@@ -225,4 +209,12 @@ fn main() {
 
     println!("Part 1 solution: {}", part1(&inputs));
     println!("Part 2 solution: {}", part2(&inputs));
+}
+
+#[test]
+fn check() {
+    let inputs = get_input::<String>("../inputs/day-4.txt").expect("Could not parse path!");
+    
+    assert_eq!(part1(&inputs), 250u64);
+    assert_eq!(part2(&inputs), 158u64);
 }

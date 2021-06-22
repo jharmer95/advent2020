@@ -22,9 +22,8 @@ where
 /// also separating based on a delimiter string
 pub fn get_input_delim<T>(path: &str, delim: &str) -> Result<Vec<T>, io::Error>
 where
-    T: std::str::FromStr,
+    T: std::str::FromStr + std::fmt::Display,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
-    T: std::fmt::Display,
 {
     let f = File::open(path).unwrap();
     let file_reader = BufReader::new(f);
