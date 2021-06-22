@@ -9,13 +9,13 @@ where
 {
     let f = File::open(path).unwrap();
     let file_reader = BufReader::new(f);
-    let mut nums: Vec<T> = vec![];
+    let mut vals: Vec<T> = vec![];
 
     for line in file_reader.lines() {
-        nums.push(line.unwrap().trim().parse::<T>().unwrap());
+        vals.push(line.unwrap().trim().parse::<T>().unwrap());
     }
 
-    Ok(nums)
+    Ok(vals)
 }
 
 /// Opens a file and returns a vector containing the representation of each line of the file,
@@ -28,14 +28,14 @@ where
 {
     let f = File::open(path).unwrap();
     let file_reader = BufReader::new(f);
-    let mut nums: Vec<T> = vec![];
+    let mut vals: Vec<T> = vec![];
 
     for line in file_reader.lines() {
         for num in line.unwrap().split(delim) {
             let val: T = num.parse().unwrap();
-            nums.push(val);
+            vals.push(val);
         }
     }
 
-    Ok(nums)
+    Ok(vals)
 }
