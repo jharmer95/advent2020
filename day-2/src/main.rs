@@ -2,8 +2,8 @@ use inputs::get_input;
 
 struct PassWordRule {
     character: char,
-    n1: i32,
-    n2: i32,
+    n1: u64,
+    n2: u64,
 }
 
 impl PassWordRule {
@@ -14,8 +14,8 @@ impl PassWordRule {
         (
             PassWordRule {
                 character: chunks[1].chars().nth(0).unwrap(),
-                n1: String::from(reps[0]).parse::<i32>().unwrap(),
-                n2: String::from(reps[1]).parse::<i32>().unwrap(),
+                n1: String::from(reps[0]).parse::<u64>().unwrap(),
+                n2: String::from(reps[1]).parse::<u64>().unwrap(),
             },
             String::from(chunks[2]),
         )
@@ -34,7 +34,7 @@ fn validate1(rule: &PassWordRule, in_str: &String) -> bool {
     count <= rule.n2 && count >= rule.n1
 }
 
-fn part1(list: &Vec<String>) -> i32 {
+fn part1(list: &Vec<String>) -> u64 {
     let mut count = 0;
 
     for line in list {
@@ -54,7 +54,7 @@ fn validate2(rule: &PassWordRule, in_str: &String) -> bool {
         ^ (chars[(rule.n2 - 1) as usize] == rule.character)
 }
 
-fn part2(list: &Vec<String>) -> i32 {
+fn part2(list: &Vec<String>) -> u64 {
     let mut count = 0;
 
     for line in list {
