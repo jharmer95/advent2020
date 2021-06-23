@@ -22,7 +22,7 @@ where
 /// also separating based on a delimiter string
 pub fn get_input_delim<T>(path: &str, delim: &str) -> Result<Vec<T>, io::Error>
 where
-    T: std::str::FromStr + std::fmt::Display,
+    T: std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
     let f = File::open(path).unwrap();
@@ -30,8 +30,8 @@ where
     let mut vals: Vec<T> = vec![];
 
     for line in file_reader.lines() {
-        for num in line.unwrap().split(delim) {
-            let val: T = num.parse().unwrap();
+        for val_str in line.unwrap().split(delim) {
+            let val: T = val_str.trim().parse().unwrap();
             vals.push(val);
         }
     }

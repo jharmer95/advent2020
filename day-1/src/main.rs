@@ -1,6 +1,6 @@
 use inputs::get_input;
 
-fn part1(inputs: &[u64]) -> Result<u64, String> {
+fn part1(inputs: &[u64]) -> Result<u64, &str> {
     let calculated: Vec<u64> = inputs.iter().map(|i| 2020 - i).collect();
 
     for num in inputs {
@@ -9,10 +9,10 @@ fn part1(inputs: &[u64]) -> Result<u64, String> {
         }
     }
 
-    Err(String::from("Could not find match in inputs!"))
+    Err("Could not find match in inputs!")
 }
 
-fn part2(inputs: &[u64]) -> Result<u64, String> {
+fn part2(inputs: &[u64]) -> Result<u64, &str> {
     let calculated: Vec<u64> = inputs.iter().map(|i| 2020 - i).collect();
 
     for num in inputs {
@@ -21,13 +21,13 @@ fn part2(inputs: &[u64]) -> Result<u64, String> {
                 continue;
             }
 
-            if calculated.iter().any(|i| *i == num + num2) {
+            if calculated.iter().any(|&i| i == num + num2) {
                 return Ok(num * num2 * (2020 - num - num2));
             }
         }
     }
 
-    Err(String::from("Could not find match in inputs!"))
+    Err("Could not find match in inputs!")
 }
 
 fn main() {
@@ -40,7 +40,7 @@ fn main() {
 #[test]
 fn check() {
     let numbers = get_input::<u64>("../inputs/day-1.txt").expect("Could not parse path!");
-    
+
     assert_eq!(part1(&numbers).unwrap(), 290784u64);
     assert_eq!(part2(&numbers).unwrap(), 177337980u64);
 }

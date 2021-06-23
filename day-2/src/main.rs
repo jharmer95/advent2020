@@ -7,17 +7,17 @@ struct PassWordRule {
 }
 
 impl PassWordRule {
-    fn parse(in_str: &str) -> (Self, String) {
+    fn parse(in_str: &str) -> (Self, &str) {
         let chunks: Vec<&str> = in_str.split(' ').collect();
         let reps: Vec<&str> = chunks[0].split('-').collect();
 
         (
             Self {
                 character: chunks[1].chars().next().unwrap(),
-                n1: String::from(reps[0]).parse::<usize>().unwrap(),
-                n2: String::from(reps[1]).parse::<usize>().unwrap(),
+                n1: reps[0].parse::<usize>().unwrap(),
+                n2: reps[1].parse::<usize>().unwrap(),
             },
-            String::from(chunks[2]),
+            chunks[2],
         )
     }
 }
@@ -48,9 +48,8 @@ fn part1(list: &[String]) -> u64 {
 }
 
 fn validate2(rule: &PassWordRule, in_str: &str) -> bool {
-    let chars: Vec<char> = in_str.chars().collect();
-
-    (chars[(rule.n1 - 1)] == rule.character) ^ (chars[(rule.n2 - 1)] == rule.character)
+    (in_str.chars().nth(rule.n1 - 1).unwrap() == rule.character)
+        ^ (in_str.chars().nth(rule.n2 - 1).unwrap() == rule.character)
 }
 
 fn part2(list: &[String]) -> u64 {
@@ -76,7 +75,7 @@ fn main() {
 #[test]
 fn check() {
     let input_lines = get_input::<String>("../inputs/day-2.txt").expect("Could not parse path!");
-    
+
     assert_eq!(part1(&input_lines), 582u64);
     assert_eq!(part2(&input_lines), 729u64);
 }
