@@ -2,17 +2,35 @@ use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 
 /// Opens a file and returns a vector containing the representation of each line of the file
+///
+/// # Errors
+///
+/// This function will return an error if:
+///
+/// * The path provided does not exist or is inaccessible
+/// * The data can not be parsed into type `T`
 pub fn get_input<T>(path: &str) -> Result<Vec<T>, io::Error>
 where
     T: std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
-    let f = File::open(path).unwrap();
+    let f = File::open(path)?;
+
     let file_reader = BufReader::new(f);
     let mut vals: Vec<T> = vec![];
 
     for line in file_reader.lines() {
-        vals.push(line.unwrap().trim().parse::<T>().unwrap());
+        let val = match line?.trim().parse() {
+            Ok(itm) => itm,
+            Err(_) => {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "Could parse data for type specified!",
+                ))
+            }
+        };
+
+        vals.push(val);
     }
 
     Ok(vals)
@@ -20,18 +38,34 @@ where
 
 /// Opens a file and returns a vector containing the representation of each line of the file,
 /// also separating based on a delimiter string
+///
+/// # Errors
+///
+/// This function will return an error if:
+///
+/// * The path provided does not exist or is inaccessible
+/// * The data can not be parsed into type `T`
 pub fn get_input_delim<T>(path: &str, delim: &str) -> Result<Vec<T>, io::Error>
 where
     T: std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
-    let f = File::open(path).unwrap();
+    let f = File::open(path)?;
     let file_reader = BufReader::new(f);
     let mut vals: Vec<T> = vec![];
 
     for line in file_reader.lines() {
-        for val_str in line.unwrap().split(delim) {
-            let val: T = val_str.trim().parse().unwrap();
+        for val_str in line?.split(delim) {
+            let val = match val_str.trim().parse() {
+                Ok(itm) => itm,
+                Err(_) => {
+                    return Err(io::Error::new(
+                        io::ErrorKind::InvalidData,
+                        "Could parse data for type specified!",
+                    ))
+                }
+            };
+
             vals.push(val);
         }
     }

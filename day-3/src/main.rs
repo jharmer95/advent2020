@@ -46,6 +46,6 @@ fn main() {
 fn check() {
     let inputs = get_input::<String>("../inputs/day-3.txt").expect("Could not parse path!");
 
-    assert_eq!(part1(&inputs), 289u64);
-    assert_eq!(part2(&inputs), 5522401584u64);
+    assert_eq!(part1(&inputs), 289);
+    assert_eq!(part2(&inputs), 5522401584);
 }
