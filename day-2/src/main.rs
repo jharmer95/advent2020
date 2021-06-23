@@ -39,7 +39,7 @@ fn part1(list: &[String]) -> u64 {
 
     for line in list {
         let (rule, passwd) = PassWordRule::parse(line);
-        if validate1(&rule, &passwd) {
+        if validate1(&rule, passwd) {
             count += 1;
         }
     }
@@ -57,7 +57,7 @@ fn part2(list: &[String]) -> u64 {
 
     for line in list {
         let (rule, passwd) = PassWordRule::parse(line);
-        if validate2(&rule, &passwd) {
+        if validate2(&rule, passwd) {
             count += 1;
         }
     }
