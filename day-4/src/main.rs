@@ -11,44 +11,47 @@ fn validate_passport_string1(pass_str: &str) -> bool {
 }
 
 fn validate_key(list: &[&str], key: &str, f: &dyn Fn(&&str) -> bool) -> bool {
-    match list.iter().find(|&&s| s.starts_with(key)) {
-        Some(s) => f(s),
-        None => false,
-    }
+    list.iter()
+        .find(|&&s| s.starts_with(key))
+        .map_or(false, |s| f(s))
 }
 
 fn validate_passport_string2(pass_str: &str) -> bool {
     let keys: Vec<&str> = pass_str.split(' ').collect();
 
-    validate_key(&keys, "byr:", &|s| match s[4..].parse::<i32>() {
-        Ok(num) => (1920..=2002).contains(&num),
-        _ => false,
-    }) && validate_key(&keys, "iyr:", &|s| match s[4..].parse::<i32>() {
-        Ok(num) => (2010..=2020).contains(&num),
-        _ => false,
-    }) && validate_key(&keys, "eyr:", &|s| match s[4..].parse::<i32>() {
-        Ok(num) => (2020..=2030).contains(&num),
-        _ => false,
+    validate_key(&keys, "byr:", &|s| {
+        s[4..]
+            .parse::<i32>()
+            .map_or(false, |num| (1920..=2002).contains(&num))
+    }) && validate_key(&keys, "iyr:", &|s| {
+        s[4..]
+            .parse::<i32>()
+            .map_or(false, |num| (2010..=2020).contains(&num))
+    }) && validate_key(&keys, "eyr:", &|s| {
+        s[4..]
+            .parse::<i32>()
+            .map_or(false, |num| (2020..=2030).contains(&num))
     }) && validate_key(&keys, "hgt:", &|s| {
         let hgt_str = &s[4..];
 
-        match hgt_str.find("cm") {
-            Some(idx2) => match hgt_str[..idx2].parse::<i32>() {
-                Ok(hgt) => (150..=193).contains(&hgt),
-                _ => false,
+        hgt_str.find("cm").map_or_else(
+            || {
+                hgt_str.find("in").map_or(false, |idx2| {
+                    hgt_str[..idx2]
+                        .parse::<i32>()
+                        .map_or(false, |hgt| (59..=76).contains(&hgt))
+                })
             },
-            None => match hgt_str.find("in") {
-                Some(idx2) => match hgt_str[..idx2].parse::<i32>() {
-                    Ok(hgt) => (59..=76).contains(&hgt),
-                    _ => false,
-                },
-                None => false,
+            |idx2| {
+                hgt_str[..idx2]
+                    .parse::<i32>()
+                    .map_or(false, |hgt| (150..=193).contains(&hgt))
             },
-        }
+        )
     }) && validate_key(&keys, "hcl:", &|s| {
         let mut iter = s.chars().skip(4);
 
-        iter.next().unwrap() == '#' && iter.all(|c| c.is_digit(16))
+        iter.next().unwrap() == '#' && iter.all(|c| c.is_ascii_hexdigit())
     }) && validate_key(&keys, "ecl:", &|s| {
         ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"].contains(&&s[4..])
     }) && validate_key(&keys, "pid:", &|s| {

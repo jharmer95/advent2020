@@ -20,15 +20,12 @@ where
     let mut vals: Vec<T> = vec![];
 
     for line in file_reader.lines() {
-        let val = match line?.trim().parse() {
-            Ok(itm) => itm,
-            Err(_) => {
+        let Ok(val) = line?.trim().parse() else { {
                 return Err(io::Error::new(
                     io::ErrorKind::InvalidData,
                     "Could parse data for type specified!",
                 ))
-            }
-        };
+            } };
 
         vals.push(val);
     }
@@ -56,15 +53,12 @@ where
 
     for line in file_reader.lines() {
         for val_str in line?.split(delim) {
-            let val = match val_str.trim().parse() {
-                Ok(itm) => itm,
-                Err(_) => {
+            let Ok(val) = val_str.trim().parse() else { {
                     return Err(io::Error::new(
                         io::ErrorKind::InvalidData,
                         "Could parse data for type specified!",
                     ))
-                }
-            };
+                } };
 
             vals.push(val);
         }

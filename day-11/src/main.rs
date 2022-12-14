@@ -6,18 +6,8 @@ enum Seat {
     Occupied,
 }
 
-impl Clone for Seat {
-    fn clone(&self) -> Self {
-        match self {
-            Self::None => Self::None,
-            Self::Empty => Self::Empty,
-            Self::Occupied => Self::Occupied,
-        }
-    }
-}
-
 impl Seat {
-    fn parse(c: char) -> Self {
+    const fn parse(c: char) -> Self {
         match c {
             '.' => Self::None,
             'L' => Self::Empty,
@@ -159,7 +149,6 @@ fn part1(inputs: &[String]) -> i32 {
 
 fn check_los((y, x): (usize, usize), seats: &[Vec<Seat>]) -> i32 {
     let mut count = 0;
-
     let mut current_y = y;
 
     // Look North

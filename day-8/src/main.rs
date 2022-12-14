@@ -78,7 +78,7 @@ mod cpu_sim {
         fn from_str(s: &str) -> Result<Self, Self::Err> {
             let x: Vec<&str> = s.split(' ').collect();
 
-            match x.get(0) {
+            match x.first() {
                 Some(&"nop") => Ok(Self::NOP(x[1].parse().unwrap())),
                 Some(&"acc") => Ok(Self::ACC(x[1].parse().unwrap())),
                 Some(&"jmp") => Ok(Self::JMP(x[1].parse().unwrap())),

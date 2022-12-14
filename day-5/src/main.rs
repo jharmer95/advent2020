@@ -29,7 +29,7 @@ fn calc_seat_id(input: &str) -> i32 {
             'B' => row.bisect_high(),
             'L' => column.bisect_low(),
             'R' => column.bisect_high(),
-            _ => panic!("Invalid character: '{}' detected!", c),
+            _ => panic!("Invalid character: '{c}' detected!"),
         }
     }
 

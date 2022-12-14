@@ -11,7 +11,7 @@ fn tokenize(inputs: &[String]) -> HashMap<&str, Vec<(String, usize)>> {
 
         let mut str1 = contents.replace(" bags", "");
         str1 = str1.replace(" bag", "");
-        str1 = str1.replace(".", "");
+        str1 = str1.replace('.', "");
         let mut split2: Vec<&str> = str1.split(", ").collect();
         split2.retain(|&x| x != "no other");
 
